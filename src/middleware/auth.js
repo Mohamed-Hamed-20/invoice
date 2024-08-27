@@ -38,6 +38,7 @@ export const isAuth = (allowedRoles) => {
         token: token,
         signature: process.env.ACCESS_TOKEN_SECRET,
       });
+      console.log({ decoded });
 
       // Validate decoded token payload
       if (!decoded.userId || !decoded.role || !decoded.IpAddress) {
