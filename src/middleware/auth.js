@@ -1,3 +1,4 @@
+import dotenv from "dotenv";
 import userModel from "../../DB/model/user.model.js";
 import { asyncHandler } from "../utils/errorHandling.js";
 import { verifyToken } from "../utils/token.js"; // Assuming verifyToken is imported from utils
@@ -6,6 +7,8 @@ export const roles = {
   user: "user",
   admin: "admin",
 };
+
+dotenv.config({ path: "./config/config.env" });
 
 export const isAuth = (allowedRoles) => {
   return asyncHandler(async (req, res, next) => {
