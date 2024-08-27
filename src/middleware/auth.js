@@ -8,7 +8,7 @@ export const roles = {
   admin: "admin",
 };
 
-dotenv.config({ path: "./config/config.env" });
+dotenv.config();
 
 export const isAuth = (allowedRoles) => {
   return asyncHandler(async (req, res, next) => {
