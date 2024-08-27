@@ -24,6 +24,7 @@ export const isAuth = (allowedRoles) => {
         )
       );
     }
+    console.log({ ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET });
 
     console.log(accessToken);
     console.log(process.env.ACCESS_TOKEN_STARTWITH);
