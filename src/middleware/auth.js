@@ -23,6 +23,7 @@ export const isAuth = (allowedRoles) => {
     }
 
     console.log(accessToken);
+    console.log(process.env.ACCESS_TOKEN_STARTWITH);
 
     // Check if access token starts with the correct prefix
     if (!accessToken.startsWith(process.env.ACCESS_TOKEN_STARTWITH)) {
