@@ -22,6 +22,8 @@ export const isAuth = (allowedRoles) => {
       );
     }
 
+    console.log(accessToken);
+
     // Check if access token starts with the correct prefix
     if (!accessToken.startsWith(process.env.ACCESS_TOKEN_STARTWITH)) {
       return next(new Error("Invalid token prefix", { cause: 400 }));
