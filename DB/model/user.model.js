@@ -58,6 +58,7 @@ const userSchema = new Schema(
       default:
         "https://mohamed-files.s3.amazonaws.com/default-avatar-icon-of-social-media-user-vector.jpg",
     },
+    public_id: { type: String, minlength: 5, maxlength: 500, required: false },
     role: {
       type: String,
       enum: ["admin", "user"],

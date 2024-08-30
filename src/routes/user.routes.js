@@ -4,6 +4,7 @@ import * as Vc from "../controller/user/user.vaild.js";
 
 import { isAuth, roles } from "../middleware/auth.js";
 import { valid } from "../middleware/vaildation.js";
+import { allowedExtensions, uploadMiddleware } from "../utils/multer.js";
 
 const router = express.Router();
 
@@ -21,6 +22,14 @@ router.patch(
   valid(Vc.changePassword),
   isAuth([roles.admin, roles.user]),
   Uc.changePassword
+);
+
+// change profile IMages
+router.post(
+  "/change/image",
+  isAuth([roles.admin, roles.user]),
+  uploadMiddleware(allowedExtensions.Image, "image"),
+  Uc.changeProfileImage
 );
 
 // Search users

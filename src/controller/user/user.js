@@ -1,7 +1,11 @@
+import { response } from "express";
 import userModel from "../../../DB/model/user.model.js";
 import AggregationPipeline from "../../utils/apiFeature.js";
-import { asyncHandler } from "../../utils/errorHandling.js";
+import cloudinary from "../../utils/cloudinary.js";
+import { updatedImage, uploadImage } from "../../utils/cludinaryFunction.js";
+import { asyncHandler, CustomError } from "../../utils/errorHandling.js";
 import { hashpassword, verifypass } from "../../utils/hashPassword.js";
+import { reSizeImage } from "../../utils/multer.js";
 import { sanitizeUser } from "../../utils/sanitize.data.js";
 
 export const updateUser = asyncHandler(async (req, res, next) => {
@@ -86,4 +90,45 @@ export const searchUser = asyncHandler(async (req, res, next) => {
   const users = await userModel.aggregate(Pipeline);
 
   return res.status(200).json({ message: "successfully", users });
+});
+
+export const changeProfileImage = asyncHandler(async (req, res, next) => {
+  if (!req.file) {
+    return next(new CustomError("Image Not provided", 400));
+  }
+
+  const buffer = await reSizeImage({
+    file: req.file,
+    height: 600,
+    width: 600,
+    quality: 80,
+  });
+
+
+  let public_id, secure_url;
+
+  if (req.user?.public_id) {
+    const response = await updatedImage({
+      buffer: buffer,
+      user: req.user,
+    });
+    public_id = response.public_id;
+    secure_url = response.secure_url;
+  } else {
+    const customId = `${req.user.name}-${req.user._id}`;
+    const folder = `${process.env.folderName}/${process.env.Folder_user}/${customId}`;
+    const response = await uploadImage({ buffer, folder });
+    public_id = response.public_id;
+    secure_url = response.secure_url;
+  }
+
+  req.user.imgUrl = secure_url;
+  req.user.public_id = public_id;
+
+  const user = await req.user.save();
+
+  return res.status(200).json({
+    message: "Profile image updated successfully",
+    user: sanitizeUser(user),
+  });
 });
