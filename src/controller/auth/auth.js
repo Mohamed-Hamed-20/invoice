@@ -60,18 +60,6 @@ export const login = asyncHandler(async (req, res, next) => {
     );
   }
 
-  //generate acess token
-  const accessToken = await generateToken({
-    payload: {
-      userId: user._id,
-      userAgent,
-      role: user.role,
-      IpAddress: req.ip,
-    },
-    signature: process.env.ACCESS_TOKEN_SECRET,
-    expiresIn: process.env.accessExpireIn,
-  });
-
   //generate refresh token
   const refreshToken = await generateToken({
     payload: {
@@ -84,22 +72,40 @@ export const login = asyncHandler(async (req, res, next) => {
     expiresIn: process.env.REFRESH_ExpireIn,
   });
 
+  // store ref tokens
+  const storepromice = storeRefreshToken(refreshToken, user._id, next);
+
+  //generate access token
+  const accessTokenpromice = generateToken({
+    payload: {
+      userId: user._id,
+      userAgent,
+      role: user.role,
+      IpAddress: req.ip,
+    },
+    signature: process.env.ACCESS_TOKEN_SECRET,
+    expiresIn: process.env.accessExpireIn,
+  });
+
+  const [stored, accessToken] = await Promise.all([
+    storepromice,
+    accessTokenpromice,
+  ]);
+
   // Set cookies
-  res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: process.env.MOOD === env.prod,
-    sameSite: "strict",
-    maxAge: 1 * 3600 * 1000, // 1 hour
-  });
+  // res.cookie("accessToken", accessToken, {
+  //   httpOnly: true,
+  //   secure: process.env.MOOD === env.prod,
+  //   sameSite: "strict",
+  //   maxAge: 1 * 3600 * 1000, // 1 hour
+  // });
 
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: process.env.MOOD === env.prod,
-    sameSite: "strict",
-    maxAge: 5 * 24 * 3600 * 1000, // 5 days
-  });
-
-  await storeRefreshToken(refreshToken, user._id, next);
+  // res.cookie("refreshToken", refreshToken, {
+  //   httpOnly: true,
+  //   secure: process.env.MOOD === env.prod,
+  //   sameSite: "strict",
+  //   maxAge: 5 * 24 * 3600 * 1000, // 5 days
+  // });
 
   return res.json({
     message: "Login successfully",

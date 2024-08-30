@@ -38,10 +38,10 @@ export const verifyToken = ({
     }
     return data;
   } catch (error) {
-    throw new CustomError("Invalid verify token", 400);
+    // throw new CustomError("Invalid verify token", 400);
+    throw new CustomError(error.message, 400);
   }
 };
-
 
 export const storeRefreshToken = async (refreshToken, userId, next) => {
   try {
@@ -90,4 +90,3 @@ export const storeRefreshToken = async (refreshToken, userId, next) => {
     }
   }
 };
-

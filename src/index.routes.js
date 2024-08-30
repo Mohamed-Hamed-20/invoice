@@ -14,6 +14,7 @@ import invoiceRouter from "./routes/invoice.routes.js";
 // Utilities
 import { GlobalErrorHandling } from "./utils/errorHandling.js";
 import { hellowpage } from "./utils/templetHtml.js";
+import { env } from "./utils/env.js";
 
 export const bootstrap = (app, express) => {
   // CORS Configuration
@@ -70,7 +71,15 @@ export const bootstrap = (app, express) => {
 
   // Handle Undefined Routes
   app.all("*", (req, res) => {
-    res.status(404).json({ message: "Invalid route or method!" });
+    res.status(404).json({
+      message: `Invalid route or method!`,
+      documentation: process.env.Apidoc,
+      prtofolio: "https://mohamed-hamed-smoky.vercel.app/",
+      moreInfo:
+        process.env.MOOD == env.DEV
+          ? "http://localhost:5000"
+          : "https://invoice-nine-iota.vercel.app",
+    });
   });
 
   // Global Error Handling

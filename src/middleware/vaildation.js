@@ -95,10 +95,10 @@ export const generalFields = {
 
   password: joi
     .string()
-    .regex(/^[a-zA-Z0-9]{8,}$/)
+    .regex(/^(?=.*[a-zA-Z])(?=.*[\d!@#$%^&*])[a-zA-Z\d!@#$%^&*]{8,}$/)
     .trim()
     .messages({
-      "string.pattern.base": "Password regex fail",
+      "string.pattern.base": "{#label} regex fail",
     })
     .messages(customMessages),
 

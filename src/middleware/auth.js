@@ -18,16 +18,11 @@ export const isAuth = (allowedRoles) => {
     // Check if tokens are provided
     if (!accessToken || !refreshToken) {
       return next(
-        new Error(
-          "Please login first. Refresh token or access token not found.",
-          { cause: 400 }
-        )
+        new Error("Please login . Access & Refresh token Required.", {
+          cause: 400,
+        })
       );
     }
-    console.log({ ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET });
-
-    console.log(accessToken);
-    console.log(process.env.ACCESS_TOKEN_STARTWITH);
 
     // Check if access token starts with the correct prefix
     if (!accessToken.startsWith(process.env.ACCESS_TOKEN_STARTWITH)) {
@@ -36,9 +31,12 @@ export const isAuth = (allowedRoles) => {
 
     // Extract token by splitting at the prefix
     const token = accessToken.split(process.env.ACCESS_TOKEN_STARTWITH)[1];
+    // console.log(token);
 
     try {
       // Verify token
+      console.log({ hi: "hi" });
+
       const decoded = verifyToken({
         token: token,
         signature: process.env.ACCESS_TOKEN_SECRET,
@@ -51,14 +49,15 @@ export const isAuth = (allowedRoles) => {
       }
 
       // Check if IP address matches
-      if (decoded.IpAddress !== req.ip) {
-        return next(
-          new Error("Invalid IP address, please login again", { cause: 401 })
-        );
-      }
+      // if (decoded.IpAddress !== req.ip) {
+      //   return next(
+      //     new Error("Invalid IP address, please login again", { cause: 401 })
+      //   );
+      // }
 
       // Find user by ID
-      const user = await userModel.findById(decoded.userId).lean();
+      const user = await userModel.findById(decoded.userId);
+
       if (!user) {
         return next(new Error("User not found", { cause: 404 }));
       }
@@ -66,7 +65,7 @@ export const isAuth = (allowedRoles) => {
       // Check if user has the required role
       if (!allowedRoles.includes(user.role)) {
         return next(
-          new Error("Unauthorized to access this API", { cause: 401 })
+          new Error("Unauthorized to access This API", { cause: 401 })
         );
       }
 
@@ -76,7 +75,7 @@ export const isAuth = (allowedRoles) => {
     } catch (error) {
       // Handle errors
       const message = error.message.includes("jwt expired")
-        ? "Session expired"
+        ? "Session Expired"
         : error.message;
       return next(new Error(message, { cause: 400 }));
     }
