@@ -61,5 +61,7 @@ export class CustomError extends Error {
   constructor(message, code) {
     super(message);
     this.code = code;
+    this.cause = code;
+    this.statusCode = code;
   }
 }

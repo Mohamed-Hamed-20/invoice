@@ -27,7 +27,7 @@ export class MulterConfig {
     if (this.allowedExtensionsArr.includes(file.mimetype)) {
       return cb(null, true);
     }
-    cb(new CustomError("Invalid file extension", 400), false);
+    cb(new CustomError("Invalid File Extension", 400), false);
   }
 
   upload() {
