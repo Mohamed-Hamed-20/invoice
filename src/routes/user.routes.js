@@ -40,4 +40,5 @@ router.get(
   Uc.searchUser
 );
 
+router.get("/get/info", isAuth([roles.admin, roles.user], Uc.info));
 export default router;

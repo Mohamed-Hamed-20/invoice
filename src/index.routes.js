@@ -65,6 +65,7 @@ export const bootstrap = (app, express) => {
     console.log(
       "URL: " + req.protocol + "://" + req.hostname + req.originalUrl
     );
+
     const result = await hellowpage();
     res.status(200).send(result);
   });

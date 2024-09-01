@@ -76,6 +76,11 @@ const userSchema = new Schema(
       max: 500,
       required: false,
     },
+    isBlocked: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
     Agents: [
       {
         type: String,

@@ -14,3 +14,29 @@ export const createUser = {
     })
     .required(),
 };
+
+export const updateUser = {
+  body: joi
+    .object({
+      name: generalFields.name.optional(),
+      email: generalFields.email.optional(),
+      phone: generalFields.PhoneNumber.optional(),
+      gender: generalFields.gender.optional(),
+      birthdate: generalFields.date.optional(),
+    })
+    .required(),
+
+  query: joi
+    .object({
+      userId: generalFields._id.required(),
+    })
+    .required(),
+};
+
+export const deleteUser = {
+  query: joi
+    .object({
+      userId: generalFields._id.required(),
+    })
+    .required(),
+};

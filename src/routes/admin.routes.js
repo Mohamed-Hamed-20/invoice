@@ -12,4 +12,17 @@ router.post(
   Ac.createUser
 );
 
+router.patch(
+  "/update/user",
+  valid(Vs.updateUser),
+  isAuth([roles.admin]),
+  Ac.updateUser
+);
+
+router.delete(
+  "/delete/user",
+  valid(Vs.deleteUser),
+  isAuth([roles.admin]),
+  Ac.deleteUser
+);
 export default router;

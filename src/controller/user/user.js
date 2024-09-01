@@ -18,10 +18,18 @@ export const updateUser = asyncHandler(async (req, res, next) => {
   }
 
   if (email && user.email !== email) {
+    const chkEmail = await userModel.findOne({ email });
+    if (chkEmail) {
+      return next(new Error("Email is Already Exist", { cause: 400 }));
+    }
     user.email = email;
   }
 
   if (phone && user.phone !== phone) {
+    const chkPhone = await userModel.findOne({ email });
+    if (chkPhone) {
+      return next(new Error("phone is Already Exist", { cause: 400 }));
+    }
     user.phone = phone;
   }
 
@@ -104,7 +112,6 @@ export const changeProfileImage = asyncHandler(async (req, res, next) => {
     quality: 80,
   });
 
-
   let public_id, secure_url;
 
   if (req.user?.public_id) {
@@ -131,4 +138,13 @@ export const changeProfileImage = asyncHandler(async (req, res, next) => {
     message: "Profile image updated successfully",
     user: sanitizeUser(user),
   });
+});
+
+export const info = asyncHandler(async (req, res, next) => {
+  return res
+    .status(200)
+    .json({
+      message: `welcome ${req.user.name}`,
+      user: sanitizeUser(req.user),
+    });
 });
