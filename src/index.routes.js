@@ -19,7 +19,7 @@ import { env } from "./utils/env.js";
 export const bootstrap = (app, express) => {
   // CORS Configuration
   const allowedOrigins = [
-    "https://graduation-project-beryl-seven.vercel.app",
+    "https://invoices-eight-delta.vercel.app",
     "http://localhost:3000",
     "https://localhost:3000",
   ];
